@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "591996051847",
+    "project_id": "gitr-mainproject",
+    "storage_bucket": "gitr-mainproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591996051847:android:1bbae5040d2e7559103322",
+        "android_client_info": {
+          "package_name": "com.example.gitr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBZsIfNaMl9qhMESlzCBxV1BJP76wgjlc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
