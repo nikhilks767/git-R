@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_overrides
+// ignore_for_file: prefer_const_constructors, unnecessary_overrides, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gitr/constants/color_constants.dart';
 import 'package:gitr/firebase_functions.dart';
 import 'package:gitr/utils/reset_password.dart';
+import 'package:gitr/view/admin/admin_login_screen/admin_login_screen.dart';
 import 'package:gitr/view/drawer/draw_clip.dart';
 import 'package:gitr/view/home_screen/home_screen.dart';
 import 'package:gitr/view/register_screen/register_screen.dart';
@@ -46,114 +47,130 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                AnimatedBuilder(
-                  animation: Listenable.merge([_controller]),
-                  builder: (context, child) {
-                    return ClipPath(
-                      clipper: DrawClip(_controller.value),
-                      child: Container(
-                        width: double.infinity,
-                        height: MediaQuery.sizeOf(context).height * 0.43,
-                        decoration: BoxDecoration(color: ColorConstants.amber),
-                        child: Lottie.asset(
-                          "assets/animations/Animation-2.json",
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Stack(
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        "LOGIN",
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        )),
-                      ),
-                    ],
+                  AnimatedBuilder(
+                    animation: Listenable.merge([_controller]),
+                    builder: (context, child) {
+                      return ClipPath(
+                        clipper: DrawClip(_controller.value),
+                        child: Container(
+                          width: double.infinity,
+                          height: MediaQuery.sizeOf(context).height * 0.43,
+                          decoration:
+                              BoxDecoration(color: ColorConstants.amber),
+                          child: Lottie.asset(
+                            "assets/animations/Animation-2.json",
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: emailcontroller,
-                    cursorColor: ColorConstants.amber,
-                    decoration: InputDecoration(
+                  Positioned(
+                    right: 10,
+                    top: 10,
+                    child: PopupMenuButton(
+                      icon: Icon(
+                        Icons.more_vert,
+                      ),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Text("Admin"),
+                          onTap: () {
+                            Get.to(() => AdminLoginScreen());
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "LOGIN",
+                          style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          )),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: emailcontroller,
+                      cursorColor: ColorConstants.amber,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 2, color: Colors.amber.shade800),
+                              borderRadius: BorderRadius.circular(20)),
+                          hintText: "Email"),
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      controller: passcontroller,
+                      obscureText: true,
+                      cursorColor: ColorConstants.amber,
+                      decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20)),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 2, color: Colors.amber.shade800),
                             borderRadius: BorderRadius.circular(20)),
-                        hintText: "Email"),
-                  ),
-                  SizedBox(height: 15),
-                  TextFormField(
-                    controller: passcontroller,
-                    obscureText: true,
-                    cursorColor: ColorConstants.amber,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 2, color: Colors.amber.shade800),
-                          borderRadius: BorderRadius.circular(20)),
-                      hintText: "Password",
+                        hintText: "Password",
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ResetPassword(),
-                                ));
-                          },
-                          child: Text("Forgot Password?")),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                      onPressed: () {
-                        loginUser();
-                        print("Login Successful");
-                      },
-                      child: Text("LOGIN")),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("Don't have an account?"),
-                      SizedBox(width: 8),
-                      TextButton(
-                          onPressed: () {
-                            Get.to(RegisterScreen());
-                          },
-                          child: Text("Register here"))
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Get.to(() => ResetPassword());
+                            },
+                            child: Text("Forgot Password?")),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                        onPressed: () {
+                          loginUser();
+                          print("Login Successful");
+                        },
+                        child: Text("LOGIN")),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Don't have an account?"),
+                        SizedBox(width: 8),
+                        TextButton(
+                            onPressed: () {
+                              Get.to(() => RegisterScreen());
+                            },
+                            child: Text("Register here"))
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -165,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen>
 
     FirebaseFunctions().signInUser(email: email, pass: pass).then((response) {
       if (response == null) {
-        Get.to(GitRHomeScreen());
+        Get.to(() => GitRHomeScreen());
         emailcontroller.clear();
         passcontroller.clear();
       } else {

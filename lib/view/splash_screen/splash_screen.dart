@@ -9,7 +9,7 @@ import 'package:gitr/constants/color_constants.dart';
 import 'package:gitr/view/home_screen/home_screen.dart';
 import 'package:gitr/view/login_screen/login_screen.dart';
 // import 'package:lottie/lottie.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -29,9 +29,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> navigateToNextScreen() async {
     if (user == null) {
-      await Get.off(LoginScreen());
+      await Get.off(() => LoginScreen());
     } else {
-      await Get.off(GitRHomeScreen());
+      await Get.off(() => GitRHomeScreen());
     }
   }
 
@@ -48,24 +48,24 @@ class _SplashScreenState extends State<SplashScreen> {
               height: 400,
               // width: double.infinity,
             ),
-            Text("Where Words Fail ...",
-                style: GoogleFonts.montez(
-                    textStyle: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: ColorConstants.primaryWhite,
-                        shadows: [
-                      Shadow(color: ColorConstants.deepOrange, blurRadius: 3)
-                    ]))),
-            Text("               Music Speaks 🎶",
-                style: GoogleFonts.montez(
-                    textStyle: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: ColorConstants.primaryWhite,
-                        shadows: [
-                      Shadow(color: ColorConstants.deepOrange, blurRadius: 3)
-                    ]))),
+            // Text("Where Words Fail ...",
+            //     style: GoogleFonts.montez(
+            //         textStyle: TextStyle(
+            //             fontSize: 30,
+            //             fontWeight: FontWeight.bold,
+            //             color: ColorConstants.primaryWhite,
+            //             shadows: [
+            //           Shadow(color: ColorConstants.deepOrange, blurRadius: 3)
+            //         ]))),
+            // Text("Music Speaks 🎶",
+            //     style: GoogleFonts.montez(
+            //         textStyle: TextStyle(
+            //             fontSize: 30,
+            //             fontWeight: FontWeight.bold,
+            //             color: ColorConstants.primaryWhite,
+            //             shadows: [
+            //           Shadow(color: ColorConstants.deepOrange, blurRadius: 3)
+            //         ]))),
           ],
         ),
         // child: Stack(

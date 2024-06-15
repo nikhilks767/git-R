@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_overrides
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gitr/constants/color_constants.dart';
@@ -23,6 +24,8 @@ class _RegisterScreenState extends State<RegisterScreen>
   TextEditingController namecontroller = TextEditingController();
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passcontroller = TextEditingController();
+  TextEditingController phonecontroller = TextEditingController();
+  late CollectionReference _userCollection;
   bool isVisible = true;
   @override
   void initState() {
@@ -33,7 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         lowerBound: -1,
         vsync: this)
       ..repeat();
-
+    _userCollection = FirebaseFirestore.instance.collection("users");
     super.initState();
   }
 
@@ -45,120 +48,136 @@ class _RegisterScreenState extends State<RegisterScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                AnimatedBuilder(
-                  animation: Listenable.merge([_controller]),
-                  builder: (context, child) {
-                    return ClipPath(
-                      clipper: DrawClip(_controller.value),
-                      child: Container(
-                        width: double.infinity,
-                        height: MediaQuery.sizeOf(context).height * 0.43,
-                        decoration: BoxDecoration(color: ColorConstants.amber),
-                        child: Lottie.asset(
-                          "assets/animations/Animation-3.json",
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Stack(
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        "REGISTER",
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        )),
-                      ),
-                    ],
+                  AnimatedBuilder(
+                    animation: Listenable.merge([_controller]),
+                    builder: (context, child) {
+                      return ClipPath(
+                        clipper: DrawClip(_controller.value),
+                        child: Container(
+                          width: double.infinity,
+                          height: MediaQuery.sizeOf(context).height * 0.43,
+                          decoration:
+                              BoxDecoration(color: ColorConstants.amber),
+                          child: Lottie.asset(
+                            "assets/animations/Animation-3.json",
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: namecontroller,
-                    cursorColor: ColorConstants.amber,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 2, color: Colors.amber.shade800),
-                            borderRadius: BorderRadius.circular(20)),
-                        hintText: "Name"),
-                  ),
-                  SizedBox(height: 15),
-                  TextFormField(
-                    controller: emailcontroller,
-                    cursorColor: ColorConstants.amber,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 2, color: Colors.amber.shade800),
-                            borderRadius: BorderRadius.circular(20)),
-                        hintText: "Email"),
-                  ),
-                  SizedBox(height: 15),
-                  TextFormField(
-                    controller: passcontroller,
-                    obscureText: isVisible,
-                    cursorColor: ColorConstants.amber,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 2, color: Colors.amber.shade800),
-                          borderRadius: BorderRadius.circular(20)),
-                      hintText: "Password",
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isVisible = !isVisible;
-                            });
-                          },
-                          icon: isVisible
-                              ? Icon(Icons.visibility_off)
-                              : Icon(Icons.visibility)),
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  ElevatedButton(
-                      onPressed: () {
-                        registerUser();
-                      },
-                      child: Text("REGISTER")),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("Already have an account?"),
-                      SizedBox(width: 8),
-                      TextButton(
-                          onPressed: () {
-                            Get.back(result: context);
-                          },
-                          child: Text("Login here"))
-                    ],
-                  )
                 ],
               ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "REGISTER",
+                          style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          )),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: namecontroller,
+                      cursorColor: ColorConstants.amber,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 2, color: Colors.amber.shade800),
+                              borderRadius: BorderRadius.circular(20)),
+                          hintText: "Name"),
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      controller: emailcontroller,
+                      cursorColor: ColorConstants.amber,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 2, color: Colors.amber.shade800),
+                              borderRadius: BorderRadius.circular(20)),
+                          hintText: "Email"),
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      controller: passcontroller,
+                      obscureText: isVisible,
+                      cursorColor: ColorConstants.amber,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 2, color: Colors.amber.shade800),
+                            borderRadius: BorderRadius.circular(20)),
+                        hintText: "Password",
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isVisible = !isVisible;
+                              });
+                            },
+                            icon: isVisible
+                                ? Icon(Icons.visibility_off)
+                                : Icon(Icons.visibility)),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      controller: phonecontroller,
+                      cursorColor: ColorConstants.amber,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 2, color: Colors.amber.shade800),
+                              borderRadius: BorderRadius.circular(20)),
+                          hintText: "Phone no."),
+                    ),
+                    SizedBox(height: 30),
+                    ElevatedButton(
+                        onPressed: () {
+                          registerUser();
+                        },
+                        child: Text("REGISTER")),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Already have an account?"),
+                        SizedBox(width: 8),
+                        TextButton(
+                            onPressed: () {
+                              Get.back(result: context);
+                            },
+                            child: Text("Login here"))
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -168,9 +187,10 @@ class _RegisterScreenState extends State<RegisterScreen>
     String name = namecontroller.text.trim();
     String email = emailcontroller.text.trim();
     String pass = passcontroller.text.trim();
+    int phone = int.parse(phonecontroller.text.trim());
 
     FirebaseFunctions()
-        .signUpUser(email: email, pass: pass, name: name)
+        .signUpUser(email: email, pass: pass, name: name, phone: phone)
         .then((response) {
       if (response == null) {
         Get.back(result: context);
@@ -184,4 +204,20 @@ class _RegisterScreenState extends State<RegisterScreen>
       }
     });
   }
+
+  // Future<void> addUser() {
+  //   return _userCollection.add({
+  //     "name": namecontroller.text,
+  //     "email": emailcontroller.text,
+  //     "phone": phonecontroller.text,
+  //   }).then((value) {
+  //     print("User Added Successfully");
+  //   }).catchError((error) {
+  //     print("Failed: $error");
+  //   });
+  // }
+
+  // Stream<QuerySnapshot> getUser() {
+  //   return _userCollection.snapshots();
+  // }
 }

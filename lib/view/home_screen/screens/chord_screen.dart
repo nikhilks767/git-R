@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_guitar_chord/flutter_guitar_chord.dart';
 import 'package:gitr/constants/color_constants.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:guitar_chord_library/guitar_chord_library.dart';
 
 class ChordScreen extends StatefulWidget {
@@ -68,6 +69,7 @@ class _ChordScreenState extends State<ChordScreen> {
                   indicator: BoxDecoration(
                     color: ColorConstants.amber,
                   ),
+                  labelStyle: GoogleFonts.rubik(),
                   labelColor: ColorConstants.primaryWhite,
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelPadding: EdgeInsets.symmetric(
