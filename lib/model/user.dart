@@ -8,6 +8,8 @@
 
 // String userModelToJson(UserModel data) => json.encode(data.toJson());
 
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {

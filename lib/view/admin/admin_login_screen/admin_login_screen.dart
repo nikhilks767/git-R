@@ -3,18 +3,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gitr/constants/color_constants.dart';
+import 'package:gitr/firebase_functions.dart';
 import 'package:gitr/view/admin/admin_home_screen/admin_home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class AdminLoginScreen extends StatelessWidget {
+class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({super.key});
 
   @override
+  State<AdminLoginScreen> createState() => _AdminLoginScreenState();
+}
+
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
+  TextEditingController emailcontroller = TextEditingController();
+  TextEditingController passcontroller = TextEditingController();
+  final String emailAdmin = "admin@gmail.com";
+  final String passAdmin = "gitrAdmin";
+  @override
   Widget build(BuildContext context) {
-    TextEditingController namecontroller = TextEditingController();
-    TextEditingController passcontroller = TextEditingController();
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -45,7 +53,7 @@ class AdminLoginScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       TextFormField(
-                        controller: namecontroller,
+                        controller: emailcontroller,
                         cursorColor: ColorConstants.amber,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -54,7 +62,7 @@ class AdminLoginScreen extends StatelessWidget {
                                 borderSide: BorderSide(
                                     width: 2, color: Colors.amber.shade800),
                                 borderRadius: BorderRadius.circular(20)),
-                            hintText: "Username"),
+                            hintText: "Email"),
                       ),
                       SizedBox(height: 15),
                       TextFormField(
@@ -74,29 +82,30 @@ class AdminLoginScreen extends StatelessWidget {
                       SizedBox(height: 30),
                       ElevatedButton(
                           onPressed: () {
-                            if (namecontroller.text == "admin" &&
-                                passcontroller.text == "gitrAdmin") {
-                              Get.to(() => AdminHomeScreen());
-                              print("Login Successful");
-                              namecontroller.clear();
-                              passcontroller.clear();
-                            } else if (namecontroller.text.isEmpty ||
-                                passcontroller.text.isEmpty) {
-                              showTopSnackBar(
-                                  Overlay.of(context),
-                                  CustomSnackBar.error(
-                                    message: "Please fill out the fields",
-                                    backgroundColor: ColorConstants.red,
-                                  ));
-                            } else {
-                              showTopSnackBar(
-                                  Overlay.of(context),
-                                  CustomSnackBar.error(
-                                    message:
-                                        "Username or Password is incorrect",
-                                    backgroundColor: ColorConstants.red,
-                                  ));
-                            }
+                            loginAdmin();
+                            // if (namecontroller.text == "admin" &&
+                            //     passcontroller.text == "gitrAdmin") {
+                            //   Get.to(() => AdminHomeScreen());
+                            //   print("Login Successful");
+                            //   namecontroller.clear();
+                            //   passcontroller.clear();
+                            // } else if (namecontroller.text.isEmpty ||
+                            //     passcontroller.text.isEmpty) {
+                            //   showTopSnackBar(
+                            //       Overlay.of(context),
+                            //       CustomSnackBar.error(
+                            //         message: "Please fill out the fields",
+                            //         backgroundColor: ColorConstants.red,
+                            //       ));
+                            // } else {
+                            //   showTopSnackBar(
+                            //       Overlay.of(context),
+                            //       CustomSnackBar.error(
+                            //         message:
+                            //             "Username or Password is incorrect",
+                            //         backgroundColor: ColorConstants.red,
+                            //       ));
+                            // }
                           },
                           child: Text("LOGIN")),
                     ],
@@ -108,5 +117,47 @@ class AdminLoginScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void loginAdmin() {
+    String email = emailcontroller.text.trim();
+    String pass = passcontroller.text.trim();
+
+    if (email == emailAdmin && pass == passAdmin) {
+      FirebaseFunctions()
+          .signInAdmin(email: email, pass: pass)
+          .then((response) {
+        if (response == null) {
+          Get.to(() => AdminHomeScreen());
+          print("Login Successful");
+          emailcontroller.clear();
+          passcontroller.clear();
+        } else {
+          showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.error(
+              message: "Error: $response",
+              backgroundColor: ColorConstants.red,
+            ),
+          );
+        }
+      }).catchError((e) {
+        showTopSnackBar(
+          Overlay.of(context),
+          CustomSnackBar.error(
+            message: "Error: $e",
+            backgroundColor: ColorConstants.red,
+          ),
+        );
+      });
+    } else {
+      showTopSnackBar(
+        Overlay.of(context),
+        CustomSnackBar.error(
+          message: "Incorrect email or password",
+          backgroundColor: ColorConstants.red,
+        ),
+      );
+    }
   }
 }

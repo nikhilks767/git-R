@@ -14,7 +14,7 @@ class ChordScreen extends StatefulWidget {
 }
 
 class _ChordScreenState extends State<ChordScreen> {
-  final List<String> instrumentList = ["Guitar", "Ukulele"];
+  final List<String> instrumentList = ["Guitar"];
   String? selection;
   bool isFlat = true;
   @override
@@ -27,23 +27,10 @@ class _ChordScreenState extends State<ChordScreen> {
       length: keys.length,
       child: Scaffold(
           appBar: AppBar(
+            toolbarHeight: 80,
             automaticallyImplyLeading: false,
-            titleSpacing: 0,
-            title: DropdownButton(
-              focusColor: Colors.transparent,
-              alignment: Alignment.center,
-              underline: SizedBox(),
-              value: selection ?? instrumentList[0],
-              items: instrumentList
-                  .map((String e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e),
-                      ))
-                  .toList(),
-              onChanged: (value) => setState(() {
-                selection = value;
-              }),
-            ),
+            titleSpacing: 5,
+            title: Text(instrumentList.join()),
             actions: [
               Row(
                 children: [
@@ -63,7 +50,7 @@ class _ChordScreenState extends State<ChordScreen> {
               SizedBox(width: 25)
             ],
             bottom: PreferredSize(
-              preferredSize: Size(MediaQuery.sizeOf(context).width, 70),
+              preferredSize: Size(MediaQuery.sizeOf(context).width, 60),
               child: TabBar(
                   tabAlignment: TabAlignment.start,
                   indicator: BoxDecoration(

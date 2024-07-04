@@ -54,12 +54,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: Text("$name".toUpperCase()),
                 ),
               ),
+              SizedBox(height: 5),
               Card(
                 child: ListTile(
                   leading: Icon(Icons.email),
                   title: Text("$email"),
                 ),
               ),
+              SizedBox(height: 5),
               Card(
                 child: ListTile(
                   leading: Icon(Icons.phone),

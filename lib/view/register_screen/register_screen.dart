@@ -1,11 +1,10 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_overrides
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gitr/constants/color_constants.dart';
 import 'package:gitr/firebase_functions.dart';
-import 'package:gitr/view/drawer/draw_clip.dart';
+import 'package:gitr/view/draw_clip/draw_clip.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -25,7 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen>
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passcontroller = TextEditingController();
   TextEditingController phonecontroller = TextEditingController();
-  late CollectionReference _userCollection;
+
   bool isVisible = true;
   @override
   void initState() {
@@ -36,7 +35,6 @@ class _RegisterScreenState extends State<RegisterScreen>
         lowerBound: -1,
         vsync: this)
       ..repeat();
-    _userCollection = FirebaseFirestore.instance.collection("users");
     super.initState();
   }
 
@@ -187,12 +185,23 @@ class _RegisterScreenState extends State<RegisterScreen>
     String name = namecontroller.text.trim();
     String email = emailcontroller.text.trim();
     String pass = passcontroller.text.trim();
-    int phone = int.parse(phonecontroller.text.trim());
-
+    String phoneStr = phonecontroller.text.trim();
+    if (name.isEmpty || email.isEmpty || pass.isEmpty || phoneStr.isEmpty) {
+      showTopSnackBar(
+        Overlay.of(context),
+        CustomSnackBar.error(
+          message: "Please fill in all fields",
+          backgroundColor: ColorConstants.red,
+        ),
+      );
+      return;
+    }
+    int phone = int.parse(phoneStr);
     FirebaseFunctions()
         .signUpUser(email: email, pass: pass, name: name, phone: phone)
         .then((response) {
       if (response == null) {
+        print("Registered Successfully");
         Get.back(result: context);
       } else {
         showTopSnackBar(
@@ -202,6 +211,13 @@ class _RegisterScreenState extends State<RegisterScreen>
               backgroundColor: ColorConstants.red,
             ));
       }
+    }).catchError((e) {
+      showTopSnackBar(
+          Overlay.of(context),
+          CustomSnackBar.error(
+            message: "Error : $e",
+            backgroundColor: ColorConstants.red,
+          ));
     });
   }
 

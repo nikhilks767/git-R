@@ -6,7 +6,7 @@ import 'package:gitr/constants/color_constants.dart';
 import 'package:gitr/firebase_functions.dart';
 import 'package:gitr/utils/reset_password.dart';
 import 'package:gitr/view/admin/admin_login_screen/admin_login_screen.dart';
-import 'package:gitr/view/drawer/draw_clip.dart';
+import 'package:gitr/view/draw_clip/draw_clip.dart';
 import 'package:gitr/view/home_screen/home_screen.dart';
 import 'package:gitr/view/register_screen/register_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -150,7 +150,6 @@ class _LoginScreenState extends State<LoginScreen>
                     ElevatedButton(
                         onPressed: () {
                           loginUser();
-                          print("Login Successful");
                         },
                         child: Text("LOGIN")),
                     SizedBox(height: 20),
@@ -179,12 +178,19 @@ class _LoginScreenState extends State<LoginScreen>
   void loginUser() {
     String email = emailcontroller.text.trim();
     String pass = passcontroller.text.trim();
-
     FirebaseFunctions().signInUser(email: email, pass: pass).then((response) {
       if (response == null) {
         Get.to(() => GitRHomeScreen());
+        print("Login Successful");
         emailcontroller.clear();
         passcontroller.clear();
+      } else if (email.isEmpty || pass.isEmpty) {
+        showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.error(
+              message: "Please fill in all fields",
+              backgroundColor: ColorConstants.red,
+            ));
       } else {
         showTopSnackBar(
             Overlay.of(context),

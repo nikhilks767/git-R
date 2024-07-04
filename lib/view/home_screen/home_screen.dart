@@ -9,8 +9,11 @@ import 'package:gitr/model/user.dart';
 import 'package:gitr/view/home_screen/screens/chord_screen.dart';
 import 'package:gitr/view/home_screen/screens/profile_screen.dart';
 import 'package:gitr/view/home_screen/screens/song_screen.dart';
+import 'package:gitr/view/home_screen/screens/support_screen.dart';
 import 'package:gitr/view/home_screen/screens/tuner_screen.dart';
-import 'package:gitr/view/home_screen/widgets/heading.dart';
+import 'package:gitr/view/home_screen/widgets/carousel_slider.dart';
+import 'package:gitr/view/home_screen/widgets/guitar_type.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:slidable_drawer/slidable_drawer.dart';
 
 class GitRHomeScreen extends StatefulWidget {
@@ -24,6 +27,7 @@ class _GitRHomeScreenState extends State<GitRHomeScreen> {
   final SlidableDrawerController _slidableDrawerController =
       SlidableDrawerController();
   String userName = "Loading...";
+  bool isPressed = false;
   @override
   void initState() {
     super.initState();
@@ -52,10 +56,18 @@ class _GitRHomeScreenState extends State<GitRHomeScreen> {
           automaticallyImplyLeading: false,
           leading: IconButton(
               onPressed: () {
-                _slidableDrawerController.animateToOpen();
+                isPressed
+                    ? _slidableDrawerController.animateToClose()
+                    : _slidableDrawerController.animateToOpen();
+                setState(() {
+                  isPressed = !isPressed;
+                });
               },
               icon: Icon(Icons.menu)),
-          title: Text("Welcome, $userName"),
+          title: Text(
+            "Welcome, $userName",
+            style: GoogleFonts.abel(fontWeight: FontWeight.bold, fontSize: 25),
+          ),
         ),
         body: SlidableDrawer(
           innerDrawerController: _slidableDrawerController,
@@ -104,6 +116,14 @@ class _GitRHomeScreenState extends State<GitRHomeScreen> {
                     ),
                     SizedBox(height: 5),
                     ListTile(
+                      leading: Icon(Icons.support_agent_rounded),
+                      title: Text("Support"),
+                      onTap: () {
+                        Get.to(() => SupportScreen());
+                      },
+                    ),
+                    SizedBox(height: 5),
+                    ListTile(
                       leading: Icon(Icons.person),
                       title: Text("Profile"),
                       onTap: () {
@@ -128,10 +148,29 @@ class _GitRHomeScreenState extends State<GitRHomeScreen> {
               ],
             ),
           ),
-          child: Column(
-            children: [
-              Heading(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Carousel(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, top: 40),
+                      child: Text(
+                        "Types of Guitar",
+                        style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20)),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    GuitarType()
+                  ],
+                ),
+              ],
+            ),
           ),
         ));
   }
