@@ -10,6 +10,7 @@ class SongModel {
   final String id;
   final String image;
   final String songName;
+  final String? songNameLowerCase;
   final String singer;
   final String music;
   final String rating;
@@ -20,6 +21,7 @@ class SongModel {
     required this.id,
     required this.image,
     required this.songName,
+    this.songNameLowerCase,
     required this.singer,
     required this.music,
     required this.rating,
@@ -32,6 +34,7 @@ class SongModel {
         id: documentId,
         image: map["image"],
         songName: map["songName"],
+        songNameLowerCase: map["songNameLowerCase"],
         singer: map["singer"],
         music: map["music"],
         rating: map["rating"],
@@ -43,6 +46,7 @@ class SongModel {
         "id": id,
         "image": image,
         "songName": songName,
+        "songNameLowerCase": songNameLowerCase,
         "singer": singer,
         "music": music,
         "rating": rating,

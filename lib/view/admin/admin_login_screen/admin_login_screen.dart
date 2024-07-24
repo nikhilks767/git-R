@@ -56,6 +56,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         controller: emailcontroller,
                         cursorColor: ColorConstants.amber,
                         decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.email_rounded,
+                                size: 18,
+                                color: ColorConstants.primaryBlack
+                                    .withOpacity(0.5)),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20)),
                             focusedBorder: OutlineInputBorder(
@@ -70,6 +74,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         obscureText: true,
                         cursorColor: ColorConstants.amber,
                         decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.lock,
+                              size: 18,
+                              color:
+                                  ColorConstants.primaryBlack.withOpacity(0.5)),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20)),
                           focusedBorder: OutlineInputBorder(
@@ -124,9 +132,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     String pass = passcontroller.text.trim();
 
     if (email == emailAdmin && pass == passAdmin) {
-      FirebaseFunctions()
-          .signInAdmin(email: email, pass: pass)
-          .then((response) {
+      FirebaseFunctions().signInUser(email: email, pass: pass).then((response) {
         if (response == null) {
           Get.to(() => AdminHomeScreen());
           print("Login Successful");

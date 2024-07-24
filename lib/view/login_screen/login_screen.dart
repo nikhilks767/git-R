@@ -83,6 +83,8 @@ class _LoginScreenState extends State<LoginScreen>
                           child: Text("Admin"),
                           onTap: () {
                             Get.to(() => AdminLoginScreen());
+                            emailcontroller.clear();
+                            passcontroller.clear();
                           },
                         )
                       ],
@@ -112,6 +114,10 @@ class _LoginScreenState extends State<LoginScreen>
                       controller: emailcontroller,
                       cursorColor: ColorConstants.amber,
                       decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.email_rounded,
+                              size: 18,
+                              color:
+                                  ColorConstants.primaryBlack.withOpacity(0.5)),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20)),
                           focusedBorder: OutlineInputBorder(
@@ -126,6 +132,10 @@ class _LoginScreenState extends State<LoginScreen>
                       obscureText: true,
                       cursorColor: ColorConstants.amber,
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.lock,
+                            size: 18,
+                            color:
+                                ColorConstants.primaryBlack.withOpacity(0.5)),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20)),
                         focusedBorder: OutlineInputBorder(
@@ -142,6 +152,8 @@ class _LoginScreenState extends State<LoginScreen>
                         TextButton(
                             onPressed: () {
                               Get.to(() => ResetPassword());
+                              emailcontroller.clear();
+                              passcontroller.clear();
                             },
                             child: Text("Forgot Password?")),
                       ],
@@ -161,6 +173,8 @@ class _LoginScreenState extends State<LoginScreen>
                         TextButton(
                             onPressed: () {
                               Get.to(() => RegisterScreen());
+                              emailcontroller.clear();
+                              passcontroller.clear();
                             },
                             child: Text("Register here"))
                       ],
@@ -175,22 +189,41 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  void loginUser() {
+  void loginUser() async {
     String email = emailcontroller.text.trim();
     String pass = passcontroller.text.trim();
-    FirebaseFunctions().signInUser(email: email, pass: pass).then((response) {
+    if (email.isEmpty || pass.isEmpty) {
+      showTopSnackBar(
+          Overlay.of(context),
+          CustomSnackBar.error(
+            message: "Please fill in all fields",
+            backgroundColor: ColorConstants.red,
+          ));
+    }
+    Get.dialog(
+      AlertDialog(
+        contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 2),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text("Logging In",
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+            CircularProgressIndicator(color: ColorConstants.amber),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+    );
+    await Future.delayed(Duration(seconds: 4));
+    await FirebaseFunctions()
+        .signInUser(email: email, pass: pass)
+        .then((response) {
+      Get.back();
       if (response == null) {
-        Get.to(() => GitRHomeScreen());
+        Get.offAll(() => GitRHomeScreen());
         print("Login Successful");
         emailcontroller.clear();
         passcontroller.clear();
-      } else if (email.isEmpty || pass.isEmpty) {
-        showTopSnackBar(
-            Overlay.of(context),
-            CustomSnackBar.error(
-              message: "Please fill in all fields",
-              backgroundColor: ColorConstants.red,
-            ));
       } else {
         showTopSnackBar(
             Overlay.of(context),

@@ -13,7 +13,7 @@
     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
 
     This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
+    the --base-href argument provided to flutter build.
   -->
   <base href="$FLUTTER_BASE_HREF">
 
@@ -43,6 +43,7 @@
 
 <body>
   <script>
+
     window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.load({
@@ -58,5 +59,6 @@
     });
   </script>
 </body>
+<script src="main.dart.js" type="application/javascript"></script>
 
 </html>

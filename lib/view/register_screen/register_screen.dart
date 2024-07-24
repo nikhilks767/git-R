@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_overrides
+// ignore_for_file: prefer_const_constructors, unnecessary_overrides, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -94,6 +94,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                       controller: namecontroller,
                       cursorColor: ColorConstants.amber,
                       decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.person_rounded,
+                              size: 18,
+                              color:
+                                  ColorConstants.primaryBlack.withOpacity(0.5)),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20)),
                           focusedBorder: OutlineInputBorder(
@@ -107,6 +111,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                       controller: emailcontroller,
                       cursorColor: ColorConstants.amber,
                       decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.email_rounded,
+                              size: 18,
+                              color:
+                                  ColorConstants.primaryBlack.withOpacity(0.5)),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20)),
                           focusedBorder: OutlineInputBorder(
@@ -121,6 +129,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                       obscureText: isVisible,
                       cursorColor: ColorConstants.amber,
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.lock,
+                            size: 18,
+                            color:
+                                ColorConstants.primaryBlack.withOpacity(0.5)),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20)),
                         focusedBorder: OutlineInputBorder(
@@ -135,8 +147,12 @@ class _RegisterScreenState extends State<RegisterScreen>
                               });
                             },
                             icon: isVisible
-                                ? Icon(Icons.visibility_off)
-                                : Icon(Icons.visibility)),
+                                ? Icon(Icons.visibility_off,
+                                    color: ColorConstants.primaryBlack
+                                        .withOpacity(0.6))
+                                : Icon(Icons.visibility,
+                                    color: ColorConstants.primaryBlack
+                                        .withOpacity(0.6))),
                       ),
                     ),
                     SizedBox(height: 15),
@@ -144,6 +160,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                       controller: phonecontroller,
                       cursorColor: ColorConstants.amber,
                       decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.phone,
+                              size: 18,
+                              color:
+                                  ColorConstants.primaryBlack.withOpacity(0.5)),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20)),
                           focusedBorder: OutlineInputBorder(
@@ -158,7 +178,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                           registerUser();
                         },
                         child: Text("REGISTER")),
-                    SizedBox(height: 20),
+                    SizedBox(height: 15),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -196,11 +216,26 @@ class _RegisterScreenState extends State<RegisterScreen>
       );
       return;
     }
+    if (phoneStr.length < 10 || phoneStr.length > 10) {
+      showTopSnackBar(
+        Overlay.of(context),
+        CustomSnackBar.error(
+          message: "Invalid Phone Number",
+          backgroundColor: ColorConstants.red,
+        ),
+      );
+      return;
+    }
     int phone = int.parse(phoneStr);
     FirebaseFunctions()
         .signUpUser(email: email, pass: pass, name: name, phone: phone)
         .then((response) {
       if (response == null) {
+        showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.success(
+              message: "Registration Successful",
+            ));
         print("Registered Successfully");
         Get.back(result: context);
       } else {

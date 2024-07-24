@@ -17,6 +17,7 @@ class _ChordScreenState extends State<ChordScreen> {
   final List<String> instrumentList = ["Guitar"];
   String? selection;
   bool isFlat = true;
+
   @override
   Widget build(BuildContext context) {
     var instrument = (selection == null || selection == "Guitar")
@@ -30,7 +31,8 @@ class _ChordScreenState extends State<ChordScreen> {
             toolbarHeight: 80,
             automaticallyImplyLeading: false,
             titleSpacing: 5,
-            title: Text(instrumentList.join()),
+            title: Text(instrumentList.join(),
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
             actions: [
               Row(
                 children: [
@@ -89,6 +91,7 @@ class _ChordScreenState extends State<ChordScreen> {
               itemBuilder: (context, index) {
                 var chord = chords[index];
                 var position = chord.chordPositions[0];
+
                 return Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),

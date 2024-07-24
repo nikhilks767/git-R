@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:gitr/constants/color_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -113,13 +112,6 @@ class _LyricPageState extends State<LyricPage> {
                   )),
             )),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     _scrollController.addListener(onScroll);
-      //     toggleScroll();
-      //   },
-      //   child: isScroll ? Text("Stop") : Text("Scroll"),
-      // ),
     );
   }
 }

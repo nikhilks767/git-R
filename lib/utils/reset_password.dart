@@ -37,6 +37,9 @@ class _ResetPasswordState extends State<ResetPassword> {
               TextFormField(
                 controller: emailcontroller,
                 decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.email_rounded,
+                        size: 18,
+                        color: ColorConstants.primaryBlack.withOpacity(0.5)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15)),
                     hintText: "Email"),

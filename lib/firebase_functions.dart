@@ -4,9 +4,11 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gitr/model/song.dart';
+import 'package:gitr/model/type.dart';
 import 'package:gitr/model/user.dart';
 
 class FirebaseFunctions {
+// Signing up
   Future<String?> signUpUser(
       {required String email,
       required String pass,
@@ -38,6 +40,7 @@ class FirebaseFunctions {
     return null;
   }
 
+//  Login user
   Future<String?> signInUser(
       {required String email, required String pass}) async {
     try {
@@ -53,6 +56,19 @@ class FirebaseFunctions {
     return null;
   }
 
+// LogOut user
+  static Future<String?> signOutUser() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } on FirebaseException catch (e) {
+      return e.message;
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+// Password resetting
   Future<String?> resetPassword({required String email}) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(
@@ -66,6 +82,7 @@ class FirebaseFunctions {
     return null;
   }
 
+// Getting all users
   static Future<List<UserModel>> getAllUsers() async {
     try {
       QuerySnapshot querySnapshot =
@@ -80,28 +97,18 @@ class FirebaseFunctions {
     }
   }
 
+// Getting user profile based on user id
   Future<UserModel?> getUserProfile(String userId) async {
     print('Fetching user profile for ID: $userId');
     return await UserModel.getById(userId);
   }
 
-  Future<String?> signInAdmin(
-      {required String email, required String pass}) async {
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: pass);
-    } on FirebaseException catch (e) {
-      return e.message;
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
-
+// Adding songs
   static Future<String?> addSong({
     String? id,
     required String image,
     required String name,
+    String? nameLowerCase,
     required String singer,
     required String music,
     required String rating,
@@ -115,6 +122,7 @@ class FirebaseFunctions {
           id: doc.id,
           image: image,
           songName: name,
+          songNameLowerCase: nameLowerCase,
           singer: singer,
           music: music,
           rating: rating,
@@ -129,8 +137,14 @@ class FirebaseFunctions {
     return null;
   }
 
+// Getting songs
   Future<SongModel?> getSongs(String id) async {
-    print("Fetching Song with with specific id : $id");
+    print("Fetching Song with specific id : $id");
     return await SongModel.getById(id);
+  }
+
+// Getting guitar types
+  Future<TypeModel?> getGitrTypes(String id) async {
+    return await TypeModel.getById(id);
   }
 }

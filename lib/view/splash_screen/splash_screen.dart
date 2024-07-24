@@ -9,8 +9,6 @@ import 'package:gitr/constants/color_constants.dart';
 import 'package:gitr/view/admin/admin_home_screen/admin_home_screen.dart';
 import 'package:gitr/view/home_screen/home_screen.dart';
 import 'package:gitr/view/login_screen/login_screen.dart';
-// import 'package:lottie/lottie.dart';
-// import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

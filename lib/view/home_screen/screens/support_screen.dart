@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class SupportScreen extends StatelessWidget {
@@ -8,7 +10,7 @@ class SupportScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("gitR Support"),
+        title: Text("GIT-R Support"),
       ),
     );
   }

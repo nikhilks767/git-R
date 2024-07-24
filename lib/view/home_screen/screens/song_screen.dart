@@ -7,6 +7,9 @@ import 'package:gitr/constants/color_constants.dart';
 import 'package:gitr/firebase_functions.dart';
 import 'package:gitr/model/song.dart';
 import 'package:gitr/view/home_screen/screens/song_detail_screen.dart';
+import 'package:gitr/view/home_screen/widgets/search_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class SongScreen extends StatefulWidget {
   const SongScreen({super.key});
@@ -16,6 +19,7 @@ class SongScreen extends StatefulWidget {
 }
 
 class _SongScreenState extends State<SongScreen> {
+  TextEditingController searchcontroller = TextEditingController();
   List<SongModel> songs = [];
   bool isLoading = true;
   @override
@@ -25,6 +29,9 @@ class _SongScreenState extends State<SongScreen> {
   }
 
   Future<void> loadSong() async {
+    setState(() {
+      isLoading = true;
+    });
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection("songs").get();
     List<SongModel> loadedSongs = [];
@@ -40,82 +47,90 @@ class _SongScreenState extends State<SongScreen> {
     });
   }
 
+  Future<void> _refreshValue() async {
+    await loadSong();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: SizedBox(
-            height: 50,
-            width: MediaQuery.of(context).size.width,
-            child: SearchBar(
-              backgroundColor:
-                  MaterialStatePropertyAll(ColorConstants.amberShade200),
-              overlayColor:
-                  MaterialStatePropertyAll(ColorConstants.amberShade300),
-              surfaceTintColor:
-                  MaterialStatePropertyAll(ColorConstants.transparent),
-              hintText: "Search Song",
-              elevation: MaterialStatePropertyAll(3),
-              trailing: [
-                Icon(
-                  Icons.search,
-                  color: ColorConstants.primaryBlack.withOpacity(0.6),
-                ),
-                SizedBox(width: 10),
-              ],
-            ),
+          backgroundColor: ColorConstants.primaryBlack,
+          title: Text(
+            "Search a Song",
+            style: GoogleFonts.poppins(
+                color: ColorConstants.amber, fontWeight: FontWeight.bold),
           ),
-          toolbarHeight: 90,
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  await showSearch(context: context, delegate: SearchPage());
+                },
+                icon: Icon(Icons.search, color: ColorConstants.amber)),
+            SizedBox(width: 15)
+          ],
+          toolbarHeight: 70,
         ),
         body: isLoading
             ? Center(
-                child: CircularProgressIndicator(),
+                child: Lottie.asset("assets/animations/Animation - gitr.json",
+                    height: 150),
               )
-            : Padding(
-                padding: const EdgeInsets.all(15),
-                child: ListView.separated(
-                  itemCount: songs.length,
-                  itemBuilder: (context, index) {
-                    var song = songs[index];
-                    return Card(
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        contentPadding: EdgeInsets.all(7),
-                        leading: Container(
-                          width: 55,
-                          height: 100,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              image: DecorationImage(
-                                  image: NetworkImage(song.image),
-                                  fit: BoxFit.cover)),
+            : RefreshIndicator(
+                onRefresh: _refreshValue,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: ListView.separated(
+                    itemCount: songs.length,
+                    itemBuilder: (context, index) {
+                      var song = songs[index];
+                      return Card(
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          contentPadding: EdgeInsets.all(7),
+                          leading: isLoading
+                              ? CircularProgressIndicator()
+                              : Container(
+                                  width: 55,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      image: DecorationImage(
+                                          image: NetworkImage(song.image),
+                                          fit: BoxFit.cover)),
+                                ),
+                          title: Text(song.songName),
+                          subtitle: Text(
+                            song.singer,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            // maxLines: 2
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                song.rating,
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              SizedBox(width: 3),
+                              Icon(Icons.star,
+                                  color: ColorConstants.amber, size: 16),
+                              SizedBox(width: 8),
+                            ],
+                          ),
+                          onTap: () {
+                            Get.to(() => SongDetailScreen(
+                                  song: song,
+                                ));
+                          },
                         ),
-                        title: Text(song.songName),
-                        subtitle: Text(song.singer),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              song.rating,
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            SizedBox(width: 3),
-                            Icon(Icons.star,
-                                color: ColorConstants.amber, size: 15),
-                            SizedBox(width: 8),
-                          ],
-                        ),
-                        onTap: () async {
-                          await Get.to(() => SongDetailScreen(
-                                index: index,
-                              ));
-                        },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) => SizedBox(height: 8),
+                      );
+                    },
+                    separatorBuilder: (context, index) => SizedBox(height: 10),
+                  ),
                 ),
               ));
   }

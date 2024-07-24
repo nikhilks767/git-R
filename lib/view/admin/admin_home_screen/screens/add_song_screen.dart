@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gitr/constants/color_constants.dart';
 import 'package:gitr/firebase_functions.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -27,7 +28,10 @@ class _AddSongScreenState extends State<AddSongScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Add a Song"),
+        title: Text(
+          "Add a Song",
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -91,6 +95,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
   void addSong() {
     String image = imagecontroller.text.trim();
     String name = namecontroller.text.trim();
+    String nameLowerCase = name.toLowerCase();
     String singer = singercontroller.text.trim();
     String music = musiccontroller.text.trim();
     String rating = ratingcontroller.text.trim();
@@ -112,9 +117,11 @@ class _AddSongScreenState extends State<AddSongScreen> {
       );
       return;
     }
+
     FirebaseFunctions.addSong(
       image: image,
       name: name,
+      nameLowerCase: nameLowerCase,
       singer: singer,
       music: music,
       rating: rating,
@@ -123,6 +130,11 @@ class _AddSongScreenState extends State<AddSongScreen> {
     ).then((response) {
       if (response == null) {
         print("Song Added Successfully");
+        showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.success(
+              message: "Song Added Successfully",
+            ));
         Get.back(result: context);
       } else {
         showTopSnackBar(

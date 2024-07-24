@@ -33,22 +33,26 @@ dependencies:
   cupertino_icons: ^1.0.6
   firebase_auth: null
   firebase_core: null
+  firebase_storage: ^12.1.1
   flutter:
     sdk: flutter
   flutter_guitar_chord: ^0.0.2
+  flutter_sound: null
   get: ^4.6.6
   google_fonts: ^6.2.1
   guitar_chord_library: ^0.0.4
+  image_picker: ^1.1.0
   lottie: ^3.1.2
+  mic_stream: ^0.7.1+2
   permission_handler: ^11.3.1
   pitch_detector_dart: ^0.0.7
-  pitchupdart: ^0.0.6
+  scidart: ^0.0.2-dev.12
   slidable_drawer: ^1.0.8
   top_snackbar_flutter: ^3.1.0
   youtube_player_iframe_plus: ^2.3.2
 
 dev_dependencies:
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
 
