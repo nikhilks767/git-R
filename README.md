@@ -1,4 +1,4 @@
-# gitr
+# gitR
 
 A new Flutter project.
 
